@@ -8,22 +8,30 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<TitledPane alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="TEXT_ONLY" expanded="true" focusTraversable="false" graphicTextGap="0.0" mouseTransparent="false" prefHeight="562.0" prefWidth="693.0" text="Цирк им. Игоря Стечкина" textAlignment="LEFT" textOverrun="ELLIPSIS" wrapText="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.NotesController">
+<TitledPane fx:id="view" alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="TEXT_ONLY" expanded="true"
+            focusTraversable="false" graphicTextGap="0.0" mouseTransparent="false" prefHeight="562.0" prefWidth="693.0"
+            text="Цирк им. Игоря Стечкина" textAlignment="LEFT" textOverrun="ELLIPSIS" wrapText="true"
+            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.NotesController">
   <content>
     <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
       <children>
-        <ListView fx:id="locationsListView" focusTraversable="false" prefHeight="497.0" prefWidth="688.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <ListView fx:id="notesListView" focusTraversable="false" prefHeight="497.0" prefWidth="688.0"
+                  AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="0.0" />
         <ToolBar prefWidth="235.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
           <items>
-            <Button fx:id="addButton" cancelButton="false" defaultButton="false" focusTraversable="false" graphicTextGap="1.0" mnemonicParsing="false" onAction="#handleAddButtonAction" text="Добавить" />
-            <Button fx:id="changeButton" focusTraversable="false" mnemonicParsing="false" onAction="#handleChangeButtonAction" text="Изменить" />
-            <Button fx:id="removeButton" focusTraversable="false" mnemonicParsing="false" onAction="#handleRemoveButtonAction" text="Удалить" />
+            <Button fx:id="addButton" cancelButton="false" defaultButton="false" focusTraversable="false" graphicTextGap="1.0"
+                    mnemonicParsing="false" onAction="#handleAddButtonAction" text="Добавить" />
+            <Button fx:id="changeButton" focusTraversable="false" mnemonicParsing="false" onAction="#handleChangeButtonAction"
+                    text="Изменить" />
+            <Button fx:id="removeButton" focusTraversable="false" mnemonicParsing="false" onAction="#handleRemoveButtonAction"
+                    text="Удалить" />
           </items>
         </ToolBar>
       </children>
     </AnchorPane>
   </content>
   <font>
-    <Font name="System Bold" size="15.0" fx:id="x1" />
+    <Font name="System Bold" size="15.0" />
   </font>
 </TitledPane>

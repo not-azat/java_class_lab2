@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import org.jetbrains.annotations.*;
@@ -13,7 +14,7 @@ import java.io.IOException;
  */
 public class LocationItemController {
 
-    @FXML private Pane locationItemView;
+    @FXML private Parent view;
     @FXML private Label nameLabel;
     @FXML private Label locationLabel;
 
@@ -28,7 +29,8 @@ public class LocationItemController {
         }
     }
 
-    public void initialize() {
+    @FXML
+    void initialize() {
         System.out.println("LocationItemController.initialize()");
     }
 
@@ -37,8 +39,8 @@ public class LocationItemController {
         locationLabel.textProperty().setValue(latitude.toString() + " " + longitude.toString());
     }
 
-    public Pane getLocationItemView() {
-        return locationItemView;
+    public Parent getView() {
+        return view;
     }
 
 }

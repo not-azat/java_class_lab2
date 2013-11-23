@@ -8,10 +8,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<TitledPane alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="TEXT_ONLY" expanded="true"
+<TitledPane fx:id="view" alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="TEXT_ONLY" expanded="true"
             focusTraversable="false" graphicTextGap="0.0" mouseTransparent="false" prefHeight="562.0"
             prefWidth="693.0" text="Места" textAlignment="LEFT" textOverrun="ELLIPSIS" wrapText="true"
-            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.LocationsController">
+            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
+            fx:controller="controller.LocationsController">
   <content>
     <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
       <children>

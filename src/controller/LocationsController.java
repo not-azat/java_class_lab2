@@ -21,6 +21,7 @@ import java.util.Random;
 
 public class LocationsController {
 
+    @FXML private Parent view;
     @FXML private Button addButton;
     @FXML private Button changeButton;
     @FXML private Button removeButton;
@@ -31,7 +32,8 @@ public class LocationsController {
             "darkgoldenrod", "lightsalmon", "black", "rosybrown", "blue",
             "blueviolet", "brown");
 
-    public void initialize() {
+    @FXML
+    void initialize() {
         System.out.println("LocationsController.initialize()");
 
         locationsListView.setItems(data);
@@ -41,6 +43,10 @@ public class LocationsController {
                 return new ColorRectCell();
             }
         });
+    }
+
+    public Parent getView() {
+        return view;
     }
 
     @FXML
@@ -66,7 +72,7 @@ public class LocationsController {
             if (item != null) {
                 LocationItemController controller = new LocationItemController();
                 controller.setInfo("Some name #" + new Random(System.currentTimeMillis()).nextInt(), 0d, 0d);
-                setGraphic(controller.getLocationItemView());
+                setGraphic(controller.getView());
             }
         }
     }

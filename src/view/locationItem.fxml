@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="locationItemView" prefHeight="57.0" prefWidth="298.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<BorderPane fx:id="view" prefHeight="57.0" prefWidth="298.0" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/2.2">
   <left>
     <BorderPane minHeight="42.0" prefHeight="57.0" prefWidth="279.0" BorderPane.alignment="CENTER_LEFT">
       <bottom>
