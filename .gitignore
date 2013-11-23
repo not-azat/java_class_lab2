@@ -1,3 +1,5 @@
 *.iws
 workspace.xml
 tasks.xml
+*.class
+out/*
