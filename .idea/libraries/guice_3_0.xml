@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="guice-3.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/guice-spring-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-struts2-plugin-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/aopalliance.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-throwingproviders-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-multibindings-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-assistedinject-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/javax.inject.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-grapher-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-servlet-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-persist-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-jndi-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guice-jmx-3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
