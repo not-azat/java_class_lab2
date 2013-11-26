@@ -1,17 +1,13 @@
-INSERT INTO locations (name, location) VALUES(
-	'Струковский парк', 
-	GeomFromText('POINT(53.19518 50.093756)'));
-INSERT INTO locations (name, location) VALUES(
-	'площадь Куйбышева', 
-	GeomFromText('POINT(53.195489 50.101717)'));
-INSERT INTO locations (name, location) VALUES(
-	'Самарский государственный цирк им. О. Попова', 
-	GeomFromText('POINT(53.205043 50.114988)'));
-INSERT INTO locations (name, location) VALUES(
-	'Макдоналдс', 
-	GeomFromText('POINT(53.204598 50.123582)'));
-INSERT INTO locations (name, location) VALUES(
-	'площадь Революции', GeomFromText('POINT(53.185661 50.087614)'));
+INSERT INTO locations (name, latitude, longitude) VALUES(
+	'Струковский парк', 53.19518, 50.093756);
+INSERT INTO locations (name, latitude, longitude) VALUES(
+	'площадь Куйбышева', 53.195489, 50.101717);
+INSERT INTO locations (name, latitude, longitude) VALUES(
+	'Самарский государственный цирк им. О. Попова', 53.205043, 50.114988);
+INSERT INTO locations (name, latitude, longitude) VALUES(
+	'Макдоналдс', 53.204598, 50.123582);
+INSERT INTO locations (name, latitude, longitude) VALUES(
+	'площадь Революции', 53.185661, 50.087614);
 
 
 insert into notes (text, locationId) values(

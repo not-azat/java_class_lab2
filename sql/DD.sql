@@ -6,10 +6,10 @@ DROP table locations;
 CREATE TABLE locations (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    location GEOMETRY NOT NULL,
-	primary key (id),
-	SPATIAL KEY (location)
-)  ENGINE=MyISAM CHARSET=UTF8;
+    latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL,
+	primary key (id)
+) ENGINE=MyISAM CHARSET=UTF8;
 
 CREATE TABLE notes (
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
