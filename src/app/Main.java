@@ -1,5 +1,8 @@
 package app;
 
+import com.google.common.eventbus.EventBus;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +17,8 @@ import java.io.IOException;
 
 public class Main extends Application {
 
+    private final Injector injector = Guice.createInjector(new ApplicationModule());
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         try {
@@ -21,14 +26,7 @@ public class Main extends Application {
             fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
                 @Override
                 public Object call(Class<?> aClass) {
-                    try {
-                        System.out.println("Main loader called! aClass = " + aClass);
-                        return ReflectUtil.newInstance(aClass); // point to inject EventBus instance
-                    } catch (InstantiationException e) {
-                        throw new RuntimeException();
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
+                    return injector.getInstance(aClass);
                 }
             });
             Parent root = (Parent)fxmlLoader.load();

@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<TitledPane fx:id="view" alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="TEXT_ONLY" expanded="true"
+<fx:root type="javafx.scene.control.TitledPane" fx:id="view" alignment="TOP_LEFT" animated="false" collapsible="false" contentDisplay="TEXT_ONLY" expanded="true"
+
             focusTraversable="false" graphicTextGap="0.0" mouseTransparent="false" prefHeight="562.0" prefWidth="693.0"
             text="Цирк им. Игоря Стечкина" textAlignment="LEFT" textOverrun="ELLIPSIS" wrapText="true"
             xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.NotesController">
@@ -34,4 +35,4 @@
   <font>
     <Font name="System Bold" size="15.0" />
   </font>
-</TitledPane>
+</fx:root>
