@@ -20,6 +20,8 @@ import javafx.util.Callback;
 import model.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import static data.LocationsRepository.*;
 
 
@@ -87,20 +89,25 @@ public class LocationsController {
     @FXML
     public void handleAddButtonAction(ActionEvent event) {
         System.out.println("LocationsController.handleAddButtonAction()");
-        masterEventBus.post(new AddButtonClickedEvent());
-        //locationRepoBus.post(new PostUpdateEvent(locationsListView.getSelectionModel().getSelectedItem()));
+        //masterEventBus.post(new AddButtonClickedEvent());
+        new LocationEditorController(masterEventBus, null); // show editor for new location
     }
 
     @FXML
     public void handleChangeButtonAction(ActionEvent event) {
         System.out.println("LocationsController.handleChangeButtonAction()");
-        masterEventBus.post(new ChangeButtonClickedEvent());
+        //masterEventBus.post(new ChangeButtonClickedEvent());
+        List<Location> selected = locationsListView.getSelectionModel().getSelectedItems();
+        assert !selected.isEmpty() : "Change button clicked when nothing selected";
+        new LocationEditorController(masterEventBus, selected.get(0)); // show editor for selected location
     }
 
     @FXML
     public void handleRemoveButtonAction(ActionEvent event) {
         System.out.println("LocationsController.handleRemoveButtonAction()");
         masterEventBus.post(new RemoveButtonClickedEvent());
+        List<Location> selected = locationsListView.getSelectionModel().getSelectedItems();
+        assert !selected.isEmpty() : "Remove button clicked when nothing selected";
     }
 
     private class LocationListCell extends ListCell<Location> {

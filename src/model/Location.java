@@ -1,6 +1,7 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,7 +15,7 @@ public class Location implements Serializable {
     private Double longitude;
     private List<Integer> noteIds;
 
-    public Location(@NotNull Integer id, @NotNull String name, @NotNull Double latitude,
+    public Location(@Nullable Integer id, @NotNull String name, @NotNull Double latitude,
                     @NotNull Double longitude, @NotNull List<Integer> noteIds) {
         this.id = id;
         this.name = name;
@@ -23,7 +24,7 @@ public class Location implements Serializable {
         this.noteIds = noteIds;
     }
 
-    @NotNull public Integer getId() {
+    @Nullable public Integer getId() {
         return id;
     }
 
