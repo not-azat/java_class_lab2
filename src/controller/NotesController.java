@@ -18,6 +18,8 @@ import model.Note;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 import static controller.LocationsController.*;
 
 
@@ -27,13 +29,7 @@ public class NotesController {
     @FXML private Button changeButton;
     @FXML private Button removeButton;
     @FXML private ListView<Note> notesListView;
-    private ObservableList<Note> data = FXCollections.observableArrayList(
-            new Note(1, "note 1", 1),
-            new Note(2, "note 2", 1),
-            new Note(3, "note 3", 1),
-            new Note(4, "note 4", 2),
-            new Note(5, "note 5", 2),
-            new Note(6, "note 6", 1));
+    private ObservableList<Note> data = FXCollections.observableArrayList();
 
     private EventBus detailEventBus;
     private final EventBus masterEventBus;
@@ -70,19 +66,25 @@ public class NotesController {
     @FXML
     public void handleAddButtonAction(ActionEvent event) {
         System.out.println("NotesController.handleAddButtonAction()");
-        detailEventBus.post(new AddButtonClickedEvent());
+        //detailEventBus.post(new AddButtonClickedEvent());
+        assert location != null : "Add button clicked when no location set";
+        new NoteEditorController(masterEventBus, null, location); // show editor for selected note
     }
 
     @FXML
     public void handleChangeButtonAction(ActionEvent event) {
         System.out.println("NotesController.handleChangeButtonAction()");
-        detailEventBus.post(new ChangeButtonClickedEvent());
+        //detailEventBus.post(new ChangeButtonClickedEvent());
+        List<Note> selected = notesListView.getSelectionModel().getSelectedItems();
+        assert !selected.isEmpty() : "Change button clicked when nothing selected";
+        assert location != null : "Change button clicked when no location set";
+        new NoteEditorController(masterEventBus, selected.get(0), location); // show editor for selected note
     }
 
     @FXML
     public void handleRemoveButtonAction(ActionEvent event) {
         System.out.println("NotesController.handleRemoveButtonAction()");
-        detailEventBus.post(new RemoveButtonClickedEvent());
+        //detailEventBus.post(new RemoveButtonClickedEvent());
     }
 
     private static class AddButtonClickedEvent {}

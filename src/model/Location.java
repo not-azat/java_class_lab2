@@ -4,28 +4,32 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
-public class Location implements Serializable {
+public class Location extends Entity {
 
-    private final Integer id;
     private String name;
     private Double latitude;
     private Double longitude;
-    private List<Integer> noteIds;
+    private List<UUID> noteIds;
 
-    public Location(@Nullable Integer id, @NotNull String name, @NotNull Double latitude,
-                    @NotNull Double longitude, @NotNull List<Integer> noteIds) {
-        this.id = id;
+    public Location(@NotNull String name, @NotNull Double latitude,
+                    @NotNull Double longitude, @NotNull List<UUID> noteIds) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.noteIds = noteIds;
     }
 
-    @Nullable public Integer getId() {
-        return id;
+    public Location(@NotNull Location other) {
+        super(other.getId());
+        this.name = other.name;
+        this.latitude = other.latitude;
+        this.longitude = other.longitude;
+        this.noteIds = new ArrayList<>(other.noteIds);
     }
 
     @NotNull public String getName() {
@@ -52,12 +56,18 @@ public class Location implements Serializable {
         this.longitude = longitude;
     }
 
-    @NotNull public List<Integer> getNoteIds() {
+    @NotNull public List<UUID> getNoteIds() {
         return noteIds;
     }
 
-    public void setNoteIds(@NotNull List<Integer> noteIds) {
+    public void setNoteIds(@NotNull List<UUID> noteIds) {
         this.noteIds = noteIds;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Location[id: %s, name: %s, latitude: %f, longitude: %f, noteIds: %s",
+                getId(), name, latitude, longitude, noteIds);
     }
 
 }

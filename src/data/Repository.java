@@ -2,9 +2,8 @@ package data;
 
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import model.Entity;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.DirectoryStream;
@@ -13,136 +12,104 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
-public abstract class Repository<T extends Serializable> {
+public abstract class Repository<T extends Entity> {
 
-    private final EventBus bus;
+    public final EventBus eventBus;
     private final String storagePath;
+    private static final String ext = ".bin";
 
     protected Repository(@NotNull EventBus repoBus, @NotNull String storagePath) {
-        this.bus = repoBus;
-        bus.register(this);
+        this.eventBus = repoBus;
+        eventBus.register(this);
         this.storagePath = storagePath;
+        initialize();
     }
 
-    @NotNull
-    protected abstract String fileNameFor(@NotNull T entity);
-
-    @Subscribe
-    private void handleLoadAllEvent(LoadAllEvent event) {
-        System.out.println("Repository LoadAllEvent");
+    private void initialize() {
         try {
-            List<T> entities = readAll();
-            bus.post(new LoadAllReplyEvent<>(entities, null));
-        } catch (RepositoryException e) {
-            bus.post(new LoadAllReplyEvent<>(null, e));
-            System.out.println(e);
-        }
-    }
-
-    @Subscribe
-    private void handleLoadByIdEvent(LoadByIdEvent<T> event) {
-        System.out.println("Repository LoadByIdEvent id: " + event.id);
-        try {
-            T entity = readEntity(event.id.toString());
-            bus.post(new LoadByIdReplyEvent<>(event.id, entity, null));
-        } catch (RepositoryException e) {
-            bus.post(new LoadByIdReplyEvent<>(event.id, null, e));
-            System.out.println(e);
-        }
-    }
-
-    @Subscribe
-    private void handleUpdateEvent(PostUpdateEvent<T> event) {
-        System.out.println("Repository PostUpdateEvent value: " + event.value);
-        try {
-            writeEntity(event.value, fileNameFor(event.value));
-            bus.post(new UpdatesOccurredEvent<>(event.value));
-        } catch (RepositoryException e) {
-            System.out.println(e);
-        }
-    }
-
-    private void writeEntity(@NotNull T entity, @NotNull String fileName) throws RepositoryException {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(storagePath + fileName))) {
-            out.writeObject(entity);
-            System.out.println("Repository wrote: " + storagePath + fileName);
+            Path dir = FileSystems.getDefault().getPath(storagePath);
+            if (!Files.exists(dir))
+                Files.createDirectory(dir);
         } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void save(@NotNull T entity) throws RepositoryException {
+        Object event;
+        if (entity.getId() == null) {
+            entity.setId(UUID.randomUUID());
+            event = new CreationsOccurredEvent<>(entity);
+        } else {
+            event = new UpdatesOccurredEvent<>(entity);
+        }
+        String fileName = storagePath + entity.getId().toString() + ext;
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            out.writeObject(entity);
+            System.out.println("Repository wrote: " + fileName);
+            eventBus.post(event);
+        } catch (IOException e) {
+            e.printStackTrace();
             throw new RepositoryException("Error in serialization", e);
         }
     }
 
+    public void remove(@NotNull UUID id) throws RepositoryException {
+        String fileName = storagePath + id.toString() + ext;
+        try {
+            if (Files.deleteIfExists(FileSystems.getDefault().getPath(fileName)))
+                eventBus.post(new RemovesOccurredEvent(id));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RepositoryException("Error when removing entity with id: " + id, e);
+        }
+    }
+
     @NotNull
-    private List<T> readAll() throws RepositoryException {
-        List<T> result = new ArrayList<T>();
+    public List<T> findAll() throws RepositoryException {
+        List<T> result = new ArrayList<>();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(FileSystems.getDefault().getPath(storagePath))) {
             for (Path p : ds) {
-                try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(p))) {
-                    result.add((T)in.readObject());
-                } catch (ClassNotFoundException | IOException e) {
-                    throw new RepositoryException("Error in all entities deserialization", e);
+                System.out.printf("Repository.findAll found path: %s\n", p);
+                if (p.toString().endsWith(ext)) {
+                    try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(p))) {
+                        result.add((T) in.readObject());
+                    } catch (ClassCastException | ClassNotFoundException | IOException e) {
+                        e.printStackTrace();
+                        throw new RepositoryException("Error in all entities deserialization", e);
+                    }
                 }
             }
             return result;
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RepositoryException("Error in all entities deserialization", e);
         }
     }
 
     @NotNull
-    private T readEntity(@NotNull String fileName) throws RepositoryException {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(storagePath + fileName))) {
-            T entity = (T)in.readObject();
-            System.out.println("Repository read: " + storagePath + fileName);
+    public T findById(@NotNull UUID id) throws RepositoryException {
+        String fileName = storagePath + id.toString() + ext;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            T entity = (T) in.readObject();
+            System.out.println("Repository read: " + fileName);
             return entity;
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+            throw new RepositoryException("Incompatible stored entity for fileName: " + fileName, e);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             throw new RepositoryException("No stored entity for fileName: " + fileName, e);
         } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
             throw new RepositoryException("Error in entity deserialization", e);
         }
     }
 
-
-    public static class LoadAllEvent {}
-
-    public static class LoadAllReplyEvent<T> {
-        public final Exception exception;
-        public final List<T> values;
-
-        LoadAllReplyEvent(@Nullable List<T> values, @Nullable Exception exception) {
-            this.values = values;
-            this.exception = exception;
-        }
-    }
-
-    public static class LoadByIdEvent<T> {
-        public final Integer id;
-
-        public LoadByIdEvent(@NotNull Integer id) {
-            this.id = id;
-        }
-    }
-
-    public static class LoadByIdReplyEvent<T> {
-        public final Integer id;
-        public final Exception exception;
-        public final T value;
-
-        LoadByIdReplyEvent(@NotNull Integer id, @Nullable T value, @Nullable Exception exception) {
-            this.id = id;
-            this.value = value;
-            this.exception = exception;
-        }
-    }
-
-    public static class PostUpdateEvent<T> {
-        public final T value;
-
-        public PostUpdateEvent(@NotNull T value) {
-            this.value = value;
-        }
-    }
 
     public static class UpdatesOccurredEvent<T> {
         public final List<T> values;
@@ -153,6 +120,31 @@ public abstract class Repository<T extends Serializable> {
         }
 
         UpdatesOccurredEvent(@NotNull List<T> values) {
+            this.values = values;
+        }
+    }
+
+    public static class RemovesOccurredEvent {
+        public final List<UUID> ids;
+
+        RemovesOccurredEvent(UUID ... ids) {
+            this.ids = Lists.newArrayList(ids);
+        }
+
+        RemovesOccurredEvent(@NotNull List<UUID> ids) {
+            this.ids = ids;
+        }
+    }
+
+    public static class CreationsOccurredEvent<T> {
+        public final List<T> values;
+
+        @SafeVarargs
+        CreationsOccurredEvent(T ... values) {
+            this.values = Lists.newArrayList(values);
+        }
+
+        CreationsOccurredEvent(@NotNull List<T> values) {
             this.values = values;
         }
     }

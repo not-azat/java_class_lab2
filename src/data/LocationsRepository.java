@@ -12,10 +12,4 @@ public class LocationsRepository extends Repository<Location> {
     public LocationsRepository(@RepoBus("Location") EventBus repoBus) {
         super(repoBus, "locations/");
     }
-
-    @Override
-    @NotNull
-    protected String fileNameFor(@NotNull Location entity) {
-        return entity.getId().toString();
-    }
 }

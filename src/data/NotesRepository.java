@@ -12,10 +12,4 @@ public class NotesRepository extends Repository<Note> {
     public NotesRepository(@RepoBus("Note") EventBus repoBus) {
         super(repoBus, "notes/");
     }
-
-    @Override
-    @NotNull
-    protected String fileNameFor(@NotNull Note entity) {
-        return entity.getId().toString();
-    }
 }

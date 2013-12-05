@@ -2,6 +2,10 @@ package controller;
 
 
 import com.google.common.eventbus.EventBus;
+import data.LocationsRepository;
+import data.RepositoryException;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class LocationEditorController {
 
@@ -29,14 +34,14 @@ public class LocationEditorController {
     @FXML private Label errorLabel;
     private Stage stage;
 
-    private final EventBus eventBus;
+    private final LocationsRepository locationsRepository;
     @NotNull private Location location;
 
-    public LocationEditorController(@NotNull EventBus eventBus, @Nullable Location location) {
+    public LocationEditorController(@NotNull LocationsRepository locationsRepository, @Nullable Location location) {
         this.location = (location == null
-                ? new Location(null, "", 0.0, 0.0, new ArrayList<Integer>())
+                ? new Location("", 0.0, 0.0, new ArrayList<UUID>())
                 : location);
-        this.eventBus = eventBus;
+        this.locationsRepository = locationsRepository;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/locationEditor.fxml"));
             fxmlLoader.setController(this);
@@ -56,6 +61,28 @@ public class LocationEditorController {
         nameTextField.setText(location.getName());
         latitudeTextField.setText(location.getLatitude().toString());
         longitudeTextField.setText(location.getLongitude().toString());
+        nameTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
+                location.setName(s2);
+            }
+        });
+        latitudeTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
+                try {
+                    location.setLatitude(Double.parseDouble(s2));
+                } catch (NumberFormatException e) {} // probably mark somehow
+            }
+        });
+        longitudeTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
+                try {
+                    location.setLongitude(Double.parseDouble(s2));
+                } catch (NumberFormatException e) {} // probably mark somehow
+            }
+        });
     }
 
     @FXML
@@ -69,9 +96,9 @@ public class LocationEditorController {
         System.out.println("LocationEditorController.handleSaveButtonClicked");
         try {
             validateLocation(location);
-            eventBus.post(new CreateLocationEvent(location));
+            locationsRepository.save(location);
             stage.hide();
-        } catch (ValidationException e) {
+        } catch (RepositoryException | ValidationException e) {
             showError(e.getMessage());
         }
     }

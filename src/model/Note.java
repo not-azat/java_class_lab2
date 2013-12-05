@@ -1,23 +1,26 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 
-public class Note implements Serializable {
-    private final Integer id;
+public class Note extends Entity {
+
     private String text;
-    private Integer locationId;
+    private UUID locationId;
 
-    public Note(@NotNull Integer id, @NotNull String text, @NotNull Integer locationId) {
-        this.id = id;
+    public Note(@NotNull String text, @NotNull UUID locationId) {
         this.text = text;
         this.locationId = locationId;
     }
 
-    @NotNull public Integer getId() {
-        return id;
+    public Note(@NotNull Note other) {
+        super(other.getId());
+        this.text = other.text;
+        this.locationId = other.locationId;
     }
 
     @NotNull public String getText() {
@@ -28,11 +31,11 @@ public class Note implements Serializable {
         this.text = text;
     }
 
-    @NotNull public Integer getLocationId() {
+    @NotNull public UUID getLocationId() {
         return locationId;
     }
 
-    public void setLocationId(@NotNull Integer locationId) {
+    public void setLocationId(@NotNull UUID locationId) {
         this.locationId = locationId;
     }
 
