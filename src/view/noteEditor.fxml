@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="view" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="321.0" prefWidth="480.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.NoteEditorController">
+<AnchorPane id="AnchorPane" fx:id="view" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="321.0" prefWidth="480.0" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/2.2">
   <children>
-    <Button fx:id="saveButton" layoutX="367.0" layoutY="275.0" mnemonicParsing="false" prefHeight="32.0" text="Сохранить" />
-    <Button fx:id="cancelButton" layoutX="283.0" layoutY="275.0" mnemonicParsing="false" prefHeight="32.0" text="Отмена" />
-    <TextArea fx:id="noteTextArea" layoutX="14.0" layoutY="48.0" prefHeight="214.0" prefWidth="452.0" promptText="Текст заметки" text="" wrapText="true" />
+    <Button fx:id="saveButton" layoutX="367.0" layoutY="275.0" mnemonicParsing="false"
+            onAction="#handleSaveButtonAction" prefHeight="32.0" text="Сохранить" />
+    <Button fx:id="cancelButton" layoutX="283.0" layoutY="275.0" mnemonicParsing="false"
+            onAction="#handleCancelButtonAction" prefHeight="32.0" text="Отмена" />
+    <TextArea fx:id="noteTextArea" layoutX="14.0" layoutY="48.0" prefHeight="214.0" prefWidth="452.0"
+              promptText="Текст заметки" text="" wrapText="true" />
     <Label fx:id="locationName" layoutX="21.0" layoutY="14.0" prefHeight="24.0" prefWidth="431.0" text="">
       <font>
         <Font size="15.0" />
       </font>
     </Label>
+    <Label fx:id="errorLabel" layoutX="21.0" layoutY="275.0" prefHeight="32.0" prefWidth="242.0"
+           text="" textFill="#cc0000" wrapText="true" />
   </children>
 </AnchorPane>

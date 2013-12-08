@@ -20,25 +20,17 @@ public class LocationItemController {
     @FXML private Label nameLabel;
     @FXML private Label locationLabel;
     @FXML private BorderPane root;
-    private final EventBus masterEventBus;
     @Nullable private Location location;
 
-    LocationItemController(EventBus masterEventBus) {
-        System.out.println("LocationItemController.[init] masterEventBus = " + masterEventBus);
-        this.masterEventBus = masterEventBus;
+    LocationItemController() {
+        System.out.println("LocationItemController()");
         try {
-            System.out.println("LocationItemController.[init]");
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/locationItem.fxml"));
             fxmlLoader.setController(this);
             fxmlLoader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @FXML
-    void initialize() {
-        System.out.println("LocationItemController.initialize()");
     }
 
     public Pane getRoot() {

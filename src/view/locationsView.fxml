@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -16,9 +13,13 @@
   <content>
     <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
       <children>
-        <ListView fx:id="locationsListView" focusTraversable="false" prefHeight="497.0" prefWidth="688.0"
+        <ListView fx:id="locationsListView" focusTraversable="false" prefHeight="497.0" prefWidth="-1"
                   AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                  AnchorPane.topAnchor="0.0" />
+                  AnchorPane.topAnchor="0.0">
+          <stylesheets>
+              <URL value="@main.css" />
+          </stylesheets>
+          </ListView>
         <ToolBar prefWidth="235.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
           <items>
             <Button fx:id="addButton" cancelButton="false" defaultButton="false" focusTraversable="false" graphicTextGap="1.0"
@@ -33,6 +34,6 @@
     </AnchorPane>
   </content>
   <font>
-    <Font name="System Bold" size="15.0" fx:id="x1" />
+    <Font name="System Bold" size="15.0"/>
   </font>
 </TitledPane>

@@ -31,7 +31,6 @@ public class Main extends Application {
             });
             Parent root = (Parent)fxmlLoader.load();
             primaryStage.setScene(new Scene(root));
-            primaryStage.setTitle("ВСЕ МЕСТА БЕЗ РЕГИСТРАЦИИ И СМС ПРЯМО СЕЙЧАС");
             primaryStage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);

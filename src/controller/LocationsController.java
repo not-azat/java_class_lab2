@@ -1,14 +1,12 @@
 package controller;
 
 import app.Master;
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import data.LocationsRepository;
-import data.RepoBus;
-import data.Repository;
-import data.RepositoryException;
+import data.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,6 +19,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import model.Location;
+import model.Note;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,22 +37,24 @@ public class LocationsController {
     @FXML private Button removeButton;
     @FXML private ListView<Location> locationsListView;
 
-    private final LocationsRepository repository;
+    private final LocationsRepository locationsRepository;
+    private final NotesRepository notesRepository;
     private final EventBus masterEventBus;
     private ObservableList<Location> data = FXCollections.observableArrayList();
 
     @Inject
-    public LocationsController(LocationsRepository repository, @Master EventBus masterEventBus) {
-        System.out.printf("LocationsController() repository: %s, repository.eventBus: %s, masterEventBus: %s\n",                repository, repository.eventBus, masterEventBus);
+    public LocationsController(LocationsRepository repository, NotesRepository notesRepository, @Master EventBus masterEventBus) {
+        System.out.printf("LocationsController() locationsRepository: %s, locationsRepository.eventBus: %s, masterEventBus: %s\n",                repository, repository.eventBus, masterEventBus);
         this.masterEventBus = masterEventBus;
-        this.repository = repository;
+        this.locationsRepository = repository;
+        this.notesRepository = notesRepository;
     }
 
     @FXML
     void initialize() {
         System.out.println("LocationsController.initialize()");
         try {
-            data.addAll(repository.findAll());
+            data.addAll(locationsRepository.findAll());
         } catch (RepositoryException e) {
             e.printStackTrace();
         }
@@ -75,7 +76,7 @@ public class LocationsController {
         changeButton.disableProperty().setValue(true);
         removeButton.disableProperty().setValue(true);
 
-        repository.eventBus.register(this);
+        locationsRepository.eventBus.register(this);
         masterEventBus.register(this);
     }
 
@@ -83,42 +84,27 @@ public class LocationsController {
         return view;
     }
 
-    @FXML
-    public void handleAddButtonAction(ActionEvent event) {
-        System.out.println("LocationsController.handleAddButtonAction()");
-        new LocationEditorController(repository, null); // show editor for new location
-    }
-
-    @FXML
-    public void handleChangeButtonAction(ActionEvent event) {
-        System.out.println("LocationsController.handleChangeButtonAction()");
-        List<Location> selected = locationsListView.getSelectionModel().getSelectedItems();
-        assert !selected.isEmpty() : "Change button clicked when nothing selected";
-        new LocationEditorController(repository, new Location(selected.get(0))); // show editor for selected location
-    }
-
-    @FXML
-    public void handleRemoveButtonAction(ActionEvent event) {
-        System.out.println("LocationsController.handleRemoveButtonAction()");
-        List<Location> selected = locationsListView.getSelectionModel().getSelectedItems();
-        assert !selected.isEmpty() : "Remove button clicked when nothing selected";
+    private void removeLocation(@NotNull Location location) {
+        assert location.getId() != null : "Can't remove uninitialized location";
         try {
-            for (Location location : selected)
-                if (location.getId() != null)
-                    repository.remove(location.getId());
+            for (Note note : notesRepository.findByLocationId(location.getId())) {
+                notesRepository.remove(note.getId());
+            }
+            locationsRepository.remove(location.getId());
         } catch (RepositoryException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     private class LocationListCell extends ListCell<Location> {
         @Override
         public void updateItem(Location item, boolean empty) {
-            System.out.println("LocationListCell.updateItem(item = " + item + ", empty = " + empty);
             super.updateItem(item, empty);
             if (item != null) {
-                LocationItemController controller = new LocationItemController(masterEventBus);
+                System.out.println("LocationListCell.updateItem(item = " + item);
+                LocationItemController controller = new LocationItemController();
                 controller.setLocation(item);
+                controller.getRoot().maxWidthProperty().bind(locationsListView.widthProperty().subtract(20));
                 setGraphic(controller.getRoot());
             }
         }
@@ -141,14 +127,49 @@ public class LocationsController {
     }
 
     private void removeLocationsFromList(@NotNull List<UUID> idsToRemove) {
+        List<UUID> selected = Lists.transform(
+                Lists.newArrayList(locationsListView.getSelectionModel().getSelectedItems()),
+                new Function<Location, UUID>() {
+                    @Override
+                    public UUID apply(Location location) {
+                        return location.getId();
+                    }
+                });
         for (UUID idToRemove : idsToRemove) {
             for (int i = 0; i < data.size(); i++) {
                 UUID id = data.get(i).getId();
                 if (id != null && id.equals(idToRemove)) {
                     data.remove(i);
+                    if (selected.contains(id))
+                        masterEventBus.post(new LocationSelectedEvent(null));
                 }
             }
         }
+    }
+
+    /********* Buttons action handlers ***************/
+
+    @FXML
+    public void handleAddButtonAction(ActionEvent event) {
+        System.out.println("LocationsController.handleAddButtonAction()");
+        new LocationEditorController(locationsRepository, null); // show editor for new location
+    }
+
+    @FXML
+    public void handleChangeButtonAction(ActionEvent event) {
+        System.out.println("LocationsController.handleChangeButtonAction()");
+        List<Location> selected = locationsListView.getSelectionModel().getSelectedItems();
+        assert !selected.isEmpty() : "Change button clicked when nothing selected";
+        new LocationEditorController(locationsRepository, new Location(selected.get(0))); // show editor for selected location
+    }
+
+    @FXML
+    public void handleRemoveButtonAction(ActionEvent event) {
+        System.out.println("LocationsController.handleRemoveButtonAction()");
+        List<Location> selected = locationsListView.getSelectionModel().getSelectedItems();
+        assert !selected.isEmpty() : "Remove button clicked when nothing selected";
+        for (Location location : selected)
+            removeLocation(location);
     }
 
     /******** Repository changes event handlers ********/

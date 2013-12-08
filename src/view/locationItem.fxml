@@ -8,19 +8,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.*?>
 
-<fx:root type="javafx.scene.layout.BorderPane" prefHeight="57.0" prefWidth="298.0" xmlns:fx="http://javafx.com/fxml/1"
+<fx:root type="javafx.scene.layout.BorderPane" prefHeight="57.0" prefWidth="200" xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/2.2" fx:id="root">
   <left>
-    <BorderPane minHeight="42.0" prefHeight="57.0" prefWidth="279.0" BorderPane.alignment="CENTER_LEFT">
+    <BorderPane minHeight="42.0" prefHeight="57.0" prefWidth="-1" BorderPane.alignment="CENTER_LEFT">
       <bottom>
-        <Label fx:id="nameLabel" prefWidth="269.0" text="Label" textFill="GREY">
+        <Label fx:id="nameLabel" prefWidth="150.0" text="Label" textFill="GREY">
           <BorderPane.margin>
             <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
           </BorderPane.margin>
         </Label>
       </bottom>
       <left>
-        <Label fx:id="locationLabel" prefHeight="21.0" prefWidth="274.0" text="Label">
+        <Label fx:id="locationLabel" prefHeight="21.0" prefWidth="-1" text="Label">
           <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
           </BorderPane.margin>
@@ -29,8 +29,8 @@
     </BorderPane>
   </left>
   <right>
-    <Label minHeight="21.0" minWidth="13.0" prefHeight="42.0"
-           prefWidth="18.999900000002526" text="&gt;" textFill="#808080" BorderPane.alignment="CENTER">
+    <Label minHeight="21.0" prefHeight="42.0"
+           prefWidth="-1" text="&gt;" textFill="#808080" BorderPane.alignment="CENTER">
       <font>
         <Font name="Hoefler Text Italic" size="30.0" />
       </font>

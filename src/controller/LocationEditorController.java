@@ -39,7 +39,7 @@ public class LocationEditorController {
 
     public LocationEditorController(@NotNull LocationsRepository locationsRepository, @Nullable Location location) {
         this.location = (location == null
-                ? new Location("", 0.0, 0.0, new ArrayList<UUID>())
+                ? new Location("", 0.0, 0.0)
                 : location);
         this.locationsRepository = locationsRepository;
         try {
@@ -110,14 +110,6 @@ public class LocationEditorController {
     private static void validateLocation(Location location) throws ValidationException {
         if ("".equals(location.getName()))
             throw new ValidationException("Имя не может быть пустым");
-    }
-
-    public static class CreateLocationEvent {
-        public final Location location;
-
-        CreateLocationEvent(@NotNull Location location) {
-            this.location = location;
-        }
     }
 
     private static class ValidationException extends Exception{

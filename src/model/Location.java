@@ -14,14 +14,12 @@ public class Location extends Entity {
     private String name;
     private Double latitude;
     private Double longitude;
-    private List<UUID> noteIds;
 
     public Location(@NotNull String name, @NotNull Double latitude,
-                    @NotNull Double longitude, @NotNull List<UUID> noteIds) {
+                    @NotNull Double longitude) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.noteIds = noteIds;
     }
 
     public Location(@NotNull Location other) {
@@ -29,7 +27,6 @@ public class Location extends Entity {
         this.name = other.name;
         this.latitude = other.latitude;
         this.longitude = other.longitude;
-        this.noteIds = new ArrayList<>(other.noteIds);
     }
 
     @NotNull public String getName() {
@@ -56,18 +53,10 @@ public class Location extends Entity {
         this.longitude = longitude;
     }
 
-    @NotNull public List<UUID> getNoteIds() {
-        return noteIds;
-    }
-
-    public void setNoteIds(@NotNull List<UUID> noteIds) {
-        this.noteIds = noteIds;
-    }
-
     @Override
     public String toString() {
-        return String.format("Location[id: %s, name: %s, latitude: %f, longitude: %f, noteIds: %s",
-                getId(), name, latitude, longitude, noteIds);
+        return String.format("Location[id: %s, name: %s, latitude: %f, longitude: %f]",
+                getId(), name, latitude, longitude);
     }
 
 }
